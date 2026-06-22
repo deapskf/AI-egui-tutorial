@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>egui是什么 — EGUI 全面教程</title>
+  <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;line-height:1.75;color:#1a1a2e;background:#f8f9fa}
+#sidebar{width:280px;min-width:280px;height:100vh;position:fixed;left:0;top:0;overflow-y:auto;background:#1e1e2e;color:#cdd6f4;padding:24px 16px;z-index:10}
+#sidebar h2{font-size:1.1em;color:#f5c2e7;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #45475a}
+#sidebar ol{list-style:none;padding:0}
+#sidebar ol li{margin:2px 0;font-size:.88em}
+#sidebar ol li.part-title{font-weight:700;color:#a6e3a1;margin-top:14px;margin-bottom:4px;font-size:.78em;text-transform:uppercase;letter-spacing:.5px}
+#sidebar a{color:#bac2de;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;transition:background .15s}
+#sidebar a:hover{background:#45475a;color:#fff}
+#sidebar a.active{background:#cba6f7;color:#1e1e2e;font-weight:600}
+#content{margin-left:280px;max-width:860px;padding:40px 60px 100px;background:#fff;min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,.05)}
+#content h1{font-size:2em;margin-bottom:8px;color:#11111b}
+#content h2{font-size:1.45em;margin-top:36px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #cba6f7;color:#313244}
+#content h3{font-size:1.15em;margin-top:24px;margin-bottom:8px;color:#45475a}
+#content h4{font-size:1.05em;margin-top:16px;margin-bottom:6px;color:#585b70}
+#content p{margin:10px 0}
+#content ul,#content ol{margin:10px 0 10px 24px}
+#content li{margin:4px 0}
+#content a{color:#8839ef}
+#content code{background:#e6e9ef;padding:2px 6px;border-radius:4px;font-family:"Fira Code","Cascadia Code","JetBrains Mono","Source Code Pro","Noto Sans Mono SC",monospace;font-size:.9em;color:#d20f39}
+#content pre{background:#1e1e2e;color:#cdd6f4;padding:18px 20px;border-radius:8px;overflow-x:auto;margin:14px 0;line-height:1.55;font-size:.9em}
+#content pre code{background:none;color:#cdd6f4;padding:0;font-size:inherit}
+#content table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em}
+#content th,#content td{border:1px solid #dce0e8;padding:8px 12px;text-align:left}
+#content th{background:#e6e9ef;font-weight:700}
+#content tr:nth-child(even){background:#f8f9fb}
+#content hr{margin:28px 0;border:none;border-top:1px solid #dce0e8}
+#content blockquote{border-left:4px solid #cba6f7;padding:8px 16px;margin:14px 0;background:#f5f3ff;border-radius:0 6px 6px 0;color:#45475a}
+#content blockquote p:last-child{margin-bottom:0}
+#content img{max-width:100%;border-radius:6px;margin:12px 0}
+.source-box{background:#1e1e2e;border-radius:8px;margin:16px 0;overflow:hidden}
+.source-box .source-header{background:#313244;color:#cdd6f4;padding:10px 16px;font-size:.85em;display:flex;justify-content:space-between;align-items:center}
+.source-box .source-header a{color:#cba6f7;text-decoration:none;font-size:.8em}
+.source-box pre{margin:0;border-radius:0}
+@media(max-width:840px){#sidebar{display:none}#content{margin-left:0;padding:24px 20px}}
+@media print{#sidebar{display:none}#content{margin-left:0;box-shadow:none}}
+</style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2><a href="../index.html" style="color:#f5c2e7;text-decoration:none;">📘 EGUI 全面教程</a></h2>
+    <ol><li class="part-title">第一部分：入门篇</li><li><a class="active" href="../01-egui是什么/index.html">egui是什么</a></li><li><a href="../02-实战入门/index.html">实战入门</a></li><li><a href="../03-App-trait与帧循环/index.html">App-trait与帧循环</a></li><li><a href="../04-开发工作流/index.html">开发工作流</a></li><li class="part-title">第二部分：基础组件篇</li><li><a href="../05-文本与标签/index.html">文本与标签</a></li><li><a href="../06-按钮/index.html">按钮</a></li><li><a href="../07-输入框/index.html">输入框</a></li><li><a href="../08-复选框与开关/index.html">复选框与开关</a></li><li><a href="../09-数值输入/index.html">数值输入</a></li><li><a href="../10-下拉框与列表选择/index.html">下拉框与列表选择</a></li><li class="part-title">第三部分：布局系统</li><li><a href="../11-布局模型/index.html">布局模型</a></li><li><a href="../12-水平与垂直排列/index.html">水平与垂直排列</a></li><li><a href="../13-Grid与列布局/index.html">Grid与列布局</a></li><li><a href="../14-滚动区域/index.html">滚动区域</a></li><li><a href="../15-面板系统/index.html">面板系统</a></li><li class="part-title">第四部分：窗口与弹窗</li><li><a href="../16-窗口/index.html">窗口</a></li><li><a href="../17-右键菜单与弹窗/index.html">右键菜单与弹窗</a></li><li class="part-title">第五部分：状态管理</li><li><a href="../18-状态管理模型/index.html">状态管理模型</a></li><li><a href="../19-帧逻辑分离/index.html">帧逻辑分离</a></li><li><a href="../20-持久化/index.html">持久化</a></li><li class="part-title">第六部分：样式与主题</li><li><a href="../21-Style与Visuals/index.html">Style与Visuals</a></li><li><a href="../22-自定义字体/index.html">自定义字体</a></li><li><a href="../23-主题定制/index.html">主题定制</a></li><li class="part-title">第七部分：自定义绘制</li><li><a href="../24-Painter与Shape/index.html">Painter与Shape</a></li><li><a href="../25-自定义Widget/index.html">自定义Widget</a></li><li><a href="../26-交互式绘制/index.html">交互式绘制</a></li><li class="part-title">第八部分：生态集成</li><li><a href="../27-egui-extras/index.html">egui-extras</a></li><li><a href="../28-egui-plot/index.html">egui-plot</a></li><li><a href="../29-egui-phosphor/index.html">egui-phosphor</a></li><li><a href="../30-第三方crate集成/index.html">第三方crate集成</a></li><li><a href="../31-tokio与egui/index.html">tokio与egui</a></li><li class="part-title">第九部分：高级特性</li><li><a href="../32-动画/index.html">动画</a></li><li><a href="../33-拖拽与放置/index.html">拖拽与放置</a></li><li><a href="../34-输入处理/index.html">输入处理</a></li><li><a href="../35-多窗口/index.html">多窗口</a></li><li><a href="../36-性能优化/index.html">性能优化</a></li><li><a href="../37-常见陷阱与调试/index.html">常见陷阱与调试</a></li><li class="part-title">第十部分：深入原理</li><li><a href="../38-Immediate-Mode哲学/index.html">Immediate-Mode哲学</a></li><li><a href="../39-egui架构/index.html">egui架构</a></li><li><a href="../40-手写极简IMGUI/index.html">手写极简IMGUI</a></li><li><a href="../41-手动集成/index.html">手动集成</a></li><li><a href="../42-渲染管线/index.html">渲染管线</a></li><li class="part-title">第十一部分：工程实践</li><li><a href="../43-测试/index.html">测试</a></li><li><a href="../44-打包与分发/index.html">打包与分发</a></li><li><a href="../45-bevy-egui/index.html">bevy-egui</a></li><li class="part-title">附录</li><li><a href="../附录A-Widget速查表/index.html">附录 A · Widget速查表</a></li><li><a href="../附录B-Style-Visuals参考/index.html">附录 B · Style-Visuals参考</a></li><li><a href="../附录C-常见错误/index.html">附录 C · 常见错误</a></li><li><a href="../附录D-延伸阅读/index.html">附录 D · 延伸阅读</a></li></ol>
+  </nav>
+  <main id="content">
+    <p style="color:#8839ef;font-size:0.85em;margin-bottom:0;">第一部分：入门篇</p>
+    <h1>01 · egui 是什么</h1>
+<h2>1.1 GUI 的两条路：Retained Mode vs Immediate Mode</h2>
+<p>
+在开始学习 egui 之前，我们需要先理解一个根本性的概念区分——GUI（图形用户界面）库的两种主要设计模式。
+</p>
+<h3>用"餐厅点餐"来类比</h3>
+<p>
+想象你去一家餐厅：
+</p>
+<p>
+<strong>Retained Mode（保留模式）</strong>就像一个传统餐厅：
+</p>
+<ul><li>服务员来到你桌前，<strong>记住</strong>你点了什么菜（创建控件树）</li>
+<li>你随时可以对服务员说"我的牛排要七分熟"（修改控件属性）</li>
+<li>服务员<strong>一直记得</strong>你的所有要求（控件树常驻内存）</li>
+<li>厨房根据服务员的记录准备菜品（渲染引擎绘制）</li>
+</ul>
+<p>
+当你需要加菜或改单时，服务员只需要<strong>更新某个记录</strong>，不需要重新记录整张桌子。
+</p>
+<p>
+<strong>Immediate Mode（即时模式）</strong>则像一个自助食堂：
+</p>
+<ul><li>每一轮取餐，你都要重新排队，<strong>重新告诉</strong>厨师你要什么（每帧重建 UI 描述）</li>
+<li>厨师不会"记住"你上一轮点了什么（没有持久的控件树）</li>
+<li>但好处是——<strong>绝对不会出错</strong>：你当前拿到的就是你当前说的，不存在"服务员记错了"的情况</li>
+</ul>
+<h3>技术对比</h3>
+<table><thead><table><tr><td>特性</td><td>Retained Mode</td><td>Immediate Mode</td></tr></table></thead><tbody><table><tr><td>控件表示</td><td>控件树常驻内存，可随时修改</td><td>每帧重新生成 UI 描述，用完即弃</td></tr>
+<tr><td>状态管理</td><td>控件维护自己的状态（复杂同步）</td><td>状态在你自己的变量里（完全可控）</td></tr>
+<tr><td>数据绑定</td><td>需要专门机制（MVVM、观察者模式）</td><td>直接读写 Rust 变量（零开销抽象）</td></tr>
+<tr><td>内存占用</td><td>控件树 + 状态的开销</td><td>每帧仅临时的 UI 描述</td></tr>
+<tr><td>CPU 开销</td><td>仅在变化时更新</td><td>每帧重建（但通常极快）</td></tr>
+<tr><td>典型代表</td><td>Qt、GTK、Win32、Flutter、SwiftUI</td><td>Dear ImGui（C++）、egui（Rust）</td></tr>
+<tr><td>常用场景</td><td>消费级应用、移动 App</td><td>开发工具、游戏编辑器、调试 UI</td></tr>
+</table></tbody></table>
+<h3>为什么游戏开发工具偏爱 Immediate Mode？</h3>
+<p>
+游戏行业是 Immediate Mode 的发源地。原因是：
+</p>
+<li><strong>游戏中已经有渲染循环</strong>——Immediate Mode 自然地嵌入帧循环</li>
+<li><strong>状态是"外部的"</strong>——游戏数据（血量、分数、位置）已经存在于你的游戏状态中，不需要再"绑定"到 UI 控件</li>
+<li><strong>开发效率极高</strong>——改一行代码就能看到 UI 变化，不需要处理"创建控件 → 设置属性 → 注册回调"的繁琐流程</li>
+<li><strong>不存在状态同步 bug</strong>——不会出现"控件显示的数值和实际数值不一致"的问题</li>
+<h3>egui 的代码长什么样？</h3>
+<p>
+先看一段"Hello World"级别的代码，建立直观印象：
+</p>
+<pre><code class="language-rust">// 在 ui() 方法中
+if ui.button("点击我").clicked() {
+    self.count += 1;  // 直接修改你的数据
+}
+ui.label(format!("点击次数: {}", self.count));
+</code></pre>
+
+看到关键点了吗？<strong>按钮和标签不是"创建"出来的持久对象</strong>——它们只是在当帧被"描述"了一下。下一帧，同样的代码会再次运行，根据最新的 <code>self.count</code> 生成新的 UI 描述。
+
+这在 Retained Mode 中大约等价于（以 Qt 风格为例）：
+
+<pre><code class="language-cpp">// Qt 风格的伪代码（注意：这不是 egui 的写法！仅作对比）
+auto* button = new QPushButton("点击我", this);
+auto* label = new QLabel("点击次数: 0", this);
+connect(button, &amp;QPushButton::clicked, [this, label]() {
+    count++;
+    label-&gt;setText(QString("点击次数: %1").arg(count));
+});
+</code></pre>
+
+差异一目了然：Retained Mode 需要创建对象、连接信号、手动更新——Immediate Mode 只需要<strong>描述当前状态</strong>。
+
+<hr>
+
+<h2>1.2 egui 的定位与设计哲学</h2>
+
+<h3>egui 是什么？</h3>
+
+<a href="https://github.com/emilk/egui">egui</a>（发音 "e-gooey" 或 "e-gui"）是一个<strong>纯 Rust 编写的跨平台 Immediate Mode GUI 库</strong>。由瑞典开发者 <a href="https://github.com/emilk">Emil Ernerfeldt</a>（现就职于 <a href="https://rerun.io">Rerun</a>）创建并维护。
+
+<h3>egui 解决什么问题？</h3>
+
+egui 的目标是：<strong>让你用最少的代码，写出可用的图形界面。</strong>
+<ul><li>不需要编写 UI 描述文件（XML/JSON/DSL）</li>
+<li>不需要学习数据绑定框架</li>
+<li>不需要理解复杂的信号/槽机制</li>
+<li>不需要手动管理控件生命周期</li>
+</ul>
+你只需要在每帧"说出"你想要的 UI，egui 负责渲染它。
+
+<h3>设计取舍</h3>
+
+egui 做了以下核心取舍：
+
+<table><thead><table><tr><td>取舍</td><td>说明</td></tr></table></thead><tbody><table><tr><td><strong>CPU 换开发体验</strong></td><td>每帧重新计算 UI 布局，换来零状态同步复杂度</td></tr>
+<tr><td><strong>简单胜过花哨</strong></td><td>不做复杂的动画引擎，但内置了够用的动画 API</td></tr>
+<tr><td><strong>默认性能足够</strong></td><td>对于 99% 的应用，每帧重建 UI 的 CPU 开销可忽略</td></tr>
+<tr><td><strong>跨平台但不"原生"</strong></td><td>egui 自己绘制一切，外观统一但不使用操作系统的原生控件</td></tr>
+<tr><td><strong>纯 Rust 生态</strong></td><td>不依赖 C++ 库，编译简单，跨平台无痛</td></tr>
+</table></tbody></table>
+<h3>适用场景</h3>
+
+<table><thead><table><tr><td>✅ 非常适合</td><td>❌ 不太适合</td></tr></table></thead><tbody><table><tr><td>桌面工具/实用程序</td><td>移动端应用（电池敏感的持续重绘）</td></tr>
+<tr><td>游戏引擎编辑器</td><td>60fps 游戏内 UI（集成复杂）</td></tr>
+<tr><td>数据仪表盘/监控面板</td><td>需要复杂动画的应用</td></tr>
+<tr><td>开发调试 UI</td><td>需要操作系统原生外观的应用</td></tr>
+<tr><td>快速原型和概念验证</td><td>文字处理/排版密集型应用</td></tr>
+</table></tbody></table>
+<blockquote><p><strong>一句话总结</strong>：如果你的目标是"快速做出一个有用的桌面工具"，egui 是目前 Rust 生态中最接近"开箱即用"的选择。</p></blockquote>
+
+<hr>
+
+<h2>1.3 egui 生态全景图</h2>
+
+egui 不仅仅是一个 crate——它是<strong>一组紧密协作的 crate 家族</strong>。理解每个 crate 的职责，对于后续深入学习至关重要。
+
+<pre><code class="language-">emath  (纯数学：Vec2, Pos2, Rect, Rot2...)
+  └─ ecolor  (颜色：Color32, Rgba, Hsva...)
+      └─ epaint  (绘制原语：Shape, Tessellator, Fonts, Texture...)
+          └─ egui  (UI 构建：Widget, Context, Ui, Response...)
+              ├─ eframe  (桌面框架：窗口创建、事件循环、渲染)
+              │   ├─ egui-winit  (winit 事件 → egui 输入的桥接)
+              │   ├─ egui-wgpu  (wgpu 渲染后端)
+              │   └─ egui_glow  (OpenGL/WebGL 渲染后端)
+              ├─ egui_extras  (额外 Widget：DatePicker, Table, RetainedImage)
+              ├─ egui_plot  (2D 图表：折线图、柱状图、散点图)
+              └─ egui_phosphor  (图标字体集成)
+</code></pre>
+
+<h3>各 crate 职责速查</h3>
+
+<table><thead><table><tr><td>Crate</td><td>一句话职责</td><td>你是会直接使用的</td></tr></table></thead><tbody><table><tr><td><strong><code>emath</code></strong></td><td>2D 数学库（Vec2, Pos2, Rect, Rot2）</td><td>间接使用（egui 依赖它）</td></tr>
+<tr><td><strong><code>ecolor</code></strong></td><td>颜色类型（Color32, Rgba, Hsva）</td><td>间接使用</td></tr>
+<tr><td><strong><code>epaint</code></strong></td><td>绘制原语（Shape, Tessellator, Fonts）</td><td>间接使用</td></tr>
+<tr><td><strong><code>egui</code></strong></td><td>UI 核心库（Widget, Context, Ui）</td><td>✅ <strong>直接使用</strong></td></tr>
+<tr><td><strong><code>eframe</code></strong></td><td>桌面框架（窗口、事件循环）</td><td>✅ <strong>本教程默认选择</strong></td></tr>
+<tr><td><strong><code>egui-winit</code></strong></td><td>将 winit 事件转换为 egui 输入</td><td>仅手动集成时使用（第 41 章）</td></tr>
+<tr><td><strong><code>egui-wgpu</code></strong></td><td>wgpu 渲染后端</td><td>仅手动集成时使用（第 41 章）</td></tr>
+<tr><td><strong><code>egui_glow</code></strong></td><td>OpenGL/WebGL 渲染后端</td><td>仅手动集成时使用</td></tr>
+<tr><td><strong><code>egui_extras</code></strong></td><td>额外 Widget（表格、日期选择器）</td><td>✅ 进阶章节使用（第 27 章）</td></tr>
+<tr><td><strong><code>egui_plot</code></strong></td><td>2D 图表绘制</td><td>✅ 进阶章节使用（第 28 章）</td></tr>
+<tr><td><strong><code>egui_phosphor</code></strong></td><td>图标字体</td><td>✅ 进阶章节使用（第 29 章）</td></tr>
+</table></tbody></table>
+<h3>你只需要记住</h3>
+
+作为初学者，你只需要往 <code>Cargo.toml</code> 中添加一行：
+
+<pre><code class="language-toml">eframe = "0.34"
+</code></pre>
+
+这会自动引入 <code>egui</code>（核心）、<code>epaint</code>（绘制）、<code>eframe</code>（框架）以及 <code>wgpu</code>（默认渲染后端）。其他 crate 在需要时逐个添加即可。
+
+<hr>
+
+<h2>1.4 环境准备</h2>
+
+在开始编写代码之前，确认你的 Rust 工具链就绪：
+
+<pre><code class="language-bash"># 检查 Rust 版本（需要 &gt;= 1.96）
+rustc --version
+<h1>输出应类似: rustc 1.96.0 (xxxxxxx 2026-xx-xx)</h1>
+
+<h1>检查 cargo</h1>
+cargo --version
+<h1>输出应类似: cargo 1.96.0 (xxxxxxx 2026-xx-xx)</h1>
+</code></pre>
+
+如果你还没有安装 Rust，请访问 <a href="https://rustup.rs">https://rustup.rs</a> 安装。
+
+本教程使用 <strong>Rust 2024 Edition</strong>，egui 0.34 也默认使用此 edition。如果你运行的是 Rust 1.96+，创建新项目时会自动选择 2024 edition。
+
+<h3>关于操作系统</h3>
+
+本教程在 Windows 11 上进行开发和测试，但 egui 完全跨平台。所有代码在 macOS 和 Linux 上同样可以编译运行——如果有平台特定的注意事项，我们会在相应位置标注。
+
+<hr>
+
+<h2>本章小结</h2>
+<ul><li><strong>Immediate Mode</strong> = 每帧描述 UI，用完即弃；<strong>Retained Mode</strong> = 控件树常驻内存</li>
+<li>egui 是一个纯 Rust 的 Immediate Mode GUI 库，以简单和开发效率为核心</li>
+<li>egui 最适合工具/编辑器/仪表盘类应用</li>
+<li>egui 生态由多个 crate 组成，你只需要从 <code>eframe</code> 开始</li>
+<li><code>eframe</code> 自动引入 <code>egui</code> + <code>epaint</code>，默认使用 wgpu 渲染</li>
+</ul>
+<strong>下一章</strong>：我们将从零创建第一个 egui 应用——一个计数器。你将亲手体验 immediate mode 的代码风格，并看到一个真正可运行的窗口。
+
+<hr>
+
+<blockquote><p>📁 本章无代码示例（纯概念章）</p></blockquote>
+
+<blockquote><p>📖 延伸阅读：<a href="https://github.com/ocornut/imgui">Dear ImGui 官方介绍</a>（egui 的精神祖先）</p></blockquote>
+
+    
+  </main>
+</body>
+</html>

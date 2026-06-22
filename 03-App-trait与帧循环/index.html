@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App-trait与帧循环 — EGUI 全面教程</title>
+  <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;line-height:1.75;color:#1a1a2e;background:#f8f9fa}
+#sidebar{width:280px;min-width:280px;height:100vh;position:fixed;left:0;top:0;overflow-y:auto;background:#1e1e2e;color:#cdd6f4;padding:24px 16px;z-index:10}
+#sidebar h2{font-size:1.1em;color:#f5c2e7;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #45475a}
+#sidebar ol{list-style:none;padding:0}
+#sidebar ol li{margin:2px 0;font-size:.88em}
+#sidebar ol li.part-title{font-weight:700;color:#a6e3a1;margin-top:14px;margin-bottom:4px;font-size:.78em;text-transform:uppercase;letter-spacing:.5px}
+#sidebar a{color:#bac2de;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;transition:background .15s}
+#sidebar a:hover{background:#45475a;color:#fff}
+#sidebar a.active{background:#cba6f7;color:#1e1e2e;font-weight:600}
+#content{margin-left:280px;max-width:860px;padding:40px 60px 100px;background:#fff;min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,.05)}
+#content h1{font-size:2em;margin-bottom:8px;color:#11111b}
+#content h2{font-size:1.45em;margin-top:36px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #cba6f7;color:#313244}
+#content h3{font-size:1.15em;margin-top:24px;margin-bottom:8px;color:#45475a}
+#content h4{font-size:1.05em;margin-top:16px;margin-bottom:6px;color:#585b70}
+#content p{margin:10px 0}
+#content ul,#content ol{margin:10px 0 10px 24px}
+#content li{margin:4px 0}
+#content a{color:#8839ef}
+#content code{background:#e6e9ef;padding:2px 6px;border-radius:4px;font-family:"Fira Code","Cascadia Code","JetBrains Mono","Source Code Pro","Noto Sans Mono SC",monospace;font-size:.9em;color:#d20f39}
+#content pre{background:#1e1e2e;color:#cdd6f4;padding:18px 20px;border-radius:8px;overflow-x:auto;margin:14px 0;line-height:1.55;font-size:.9em}
+#content pre code{background:none;color:#cdd6f4;padding:0;font-size:inherit}
+#content table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em}
+#content th,#content td{border:1px solid #dce0e8;padding:8px 12px;text-align:left}
+#content th{background:#e6e9ef;font-weight:700}
+#content tr:nth-child(even){background:#f8f9fb}
+#content hr{margin:28px 0;border:none;border-top:1px solid #dce0e8}
+#content blockquote{border-left:4px solid #cba6f7;padding:8px 16px;margin:14px 0;background:#f5f3ff;border-radius:0 6px 6px 0;color:#45475a}
+#content blockquote p:last-child{margin-bottom:0}
+#content img{max-width:100%;border-radius:6px;margin:12px 0}
+.source-box{background:#1e1e2e;border-radius:8px;margin:16px 0;overflow:hidden}
+.source-box .source-header{background:#313244;color:#cdd6f4;padding:10px 16px;font-size:.85em;display:flex;justify-content:space-between;align-items:center}
+.source-box .source-header a{color:#cba6f7;text-decoration:none;font-size:.8em}
+.source-box pre{margin:0;border-radius:0}
+@media(max-width:840px){#sidebar{display:none}#content{margin-left:0;padding:24px 20px}}
+@media print{#sidebar{display:none}#content{margin-left:0;box-shadow:none}}
+</style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2><a href="../index.html" style="color:#f5c2e7;text-decoration:none;">📘 EGUI 全面教程</a></h2>
+    <ol><li class="part-title">第一部分：入门篇</li><li><a href="../01-egui是什么/index.html">egui是什么</a></li><li><a href="../02-实战入门/index.html">实战入门</a></li><li><a class="active" href="../03-App-trait与帧循环/index.html">App-trait与帧循环</a></li><li><a href="../04-开发工作流/index.html">开发工作流</a></li><li class="part-title">第二部分：基础组件篇</li><li><a href="../05-文本与标签/index.html">文本与标签</a></li><li><a href="../06-按钮/index.html">按钮</a></li><li><a href="../07-输入框/index.html">输入框</a></li><li><a href="../08-复选框与开关/index.html">复选框与开关</a></li><li><a href="../09-数值输入/index.html">数值输入</a></li><li><a href="../10-下拉框与列表选择/index.html">下拉框与列表选择</a></li><li class="part-title">第三部分：布局系统</li><li><a href="../11-布局模型/index.html">布局模型</a></li><li><a href="../12-水平与垂直排列/index.html">水平与垂直排列</a></li><li><a href="../13-Grid与列布局/index.html">Grid与列布局</a></li><li><a href="../14-滚动区域/index.html">滚动区域</a></li><li><a href="../15-面板系统/index.html">面板系统</a></li><li class="part-title">第四部分：窗口与弹窗</li><li><a href="../16-窗口/index.html">窗口</a></li><li><a href="../17-右键菜单与弹窗/index.html">右键菜单与弹窗</a></li><li class="part-title">第五部分：状态管理</li><li><a href="../18-状态管理模型/index.html">状态管理模型</a></li><li><a href="../19-帧逻辑分离/index.html">帧逻辑分离</a></li><li><a href="../20-持久化/index.html">持久化</a></li><li class="part-title">第六部分：样式与主题</li><li><a href="../21-Style与Visuals/index.html">Style与Visuals</a></li><li><a href="../22-自定义字体/index.html">自定义字体</a></li><li><a href="../23-主题定制/index.html">主题定制</a></li><li class="part-title">第七部分：自定义绘制</li><li><a href="../24-Painter与Shape/index.html">Painter与Shape</a></li><li><a href="../25-自定义Widget/index.html">自定义Widget</a></li><li><a href="../26-交互式绘制/index.html">交互式绘制</a></li><li class="part-title">第八部分：生态集成</li><li><a href="../27-egui-extras/index.html">egui-extras</a></li><li><a href="../28-egui-plot/index.html">egui-plot</a></li><li><a href="../29-egui-phosphor/index.html">egui-phosphor</a></li><li><a href="../30-第三方crate集成/index.html">第三方crate集成</a></li><li><a href="../31-tokio与egui/index.html">tokio与egui</a></li><li class="part-title">第九部分：高级特性</li><li><a href="../32-动画/index.html">动画</a></li><li><a href="../33-拖拽与放置/index.html">拖拽与放置</a></li><li><a href="../34-输入处理/index.html">输入处理</a></li><li><a href="../35-多窗口/index.html">多窗口</a></li><li><a href="../36-性能优化/index.html">性能优化</a></li><li><a href="../37-常见陷阱与调试/index.html">常见陷阱与调试</a></li><li class="part-title">第十部分：深入原理</li><li><a href="../38-Immediate-Mode哲学/index.html">Immediate-Mode哲学</a></li><li><a href="../39-egui架构/index.html">egui架构</a></li><li><a href="../40-手写极简IMGUI/index.html">手写极简IMGUI</a></li><li><a href="../41-手动集成/index.html">手动集成</a></li><li><a href="../42-渲染管线/index.html">渲染管线</a></li><li class="part-title">第十一部分：工程实践</li><li><a href="../43-测试/index.html">测试</a></li><li><a href="../44-打包与分发/index.html">打包与分发</a></li><li><a href="../45-bevy-egui/index.html">bevy-egui</a></li><li class="part-title">附录</li><li><a href="../附录A-Widget速查表/index.html">附录 A · Widget速查表</a></li><li><a href="../附录B-Style-Visuals参考/index.html">附录 B · Style-Visuals参考</a></li><li><a href="../附录C-常见错误/index.html">附录 C · 常见错误</a></li><li><a href="../附录D-延伸阅读/index.html">附录 D · 延伸阅读</a></li></ol>
+  </nav>
+  <main id="content">
+    <p style="color:#8839ef;font-size:0.85em;margin-bottom:0;">第一部分：入门篇</p>
+    <p>
+﻿# 03 · 理解 App trait 与帧循环
+</p>
+<p>
+第 2 章我们快速实现了一个计数器，但只知其然。本章将深入讲解 <strong>egui 如何运行</strong>——帧循环的结构、<code>App</code> trait 的方法职责、以及 <code>Context</code> 和 <code>Frame</code> 的角色。
+</p>
+<hr>
+<h2>3.1 帧循环全景图</h2>
+<p>
+egui 应用的生命周期可以用一个词概括：<strong>帧（Frame）</strong>。
+</p>
+<p>
+每一帧，egui 执行以下步骤：
+</p>
+<pre><code class="language-">        ┌─────────────┐
+        │  收集输入事件 │  ← 键盘、鼠标、触控、IME...
+        └──────┬──────┘
+               ▼
+        ┌─────────────┐
+        │  logic()     │  ← 数据处理、快捷键、后台任务（你的代码）
+        └──────┬──────┘
+               ▼
+        ┌─────────────┐
+        │  ui()        │  ← 构建 UI 描述（你的代码）
+        └──────┬──────┘
+               ▼
+        ┌─────────────┐
+        │  布局计算     │  ← egui 自动完成
+        └──────┬──────┘
+               ▼
+        ┌─────────────┐
+        │  Tessellation│  ← Shapes → 三角形网格（epaint）
+        └──────┬──────┘
+               ▼
+        ┌─────────────┐
+        │  GPU 渲染    │  ← wgpu/glow 提交绘制命令
+        └──────┬──────┘
+               │
+        等待下一帧 ← （有输入变化或 request_repaint 时继续）
+</code></pre>
+
+<blockquote><p><strong>关键事实</strong>：egui <strong>只在有输入变化时才绘制新帧</strong>——这是性能优化的核心。如果你不碰鼠标键盘，界面不会重绘。如果你需要持续的动画，需要调用 <code>ctx.request_repaint()</code>（第 32 章）。</p></blockquote>
+
+<hr>
+
+<h2>3.2 <code>logic()</code> 详解</h2>
+
+<code>logic()</code> 是 egui 0.34 从旧 <code>update()</code> 拆分出来的<strong>逻辑专用方法</strong>：
+
+<pre><code class="language-rust">fn logic(&amp;mut self, ctx: &amp;egui::Context, _frame: &amp;mut eframe::Frame) {
+    // 你的逻辑代码
+}
+</code></pre>
+
+<h3>职责范围</h3>
+
+<table><thead><table><tr><td>✅ 适合放 logic()</td><td>❌ 不适合放 logic()</td></tr></table></thead><tbody><table><tr><td>读取键盘输入并更新状态</td><td>调用 <code>ui.button()</code> 等 UI 构建</td></tr>
+<tr><td>异步任务结果轮询</td><td>修改 Widget 的外观</td></tr>
+<tr><td>网络请求</td><td>创建/关闭窗口</td></tr>
+<tr><td>定时器、计时器逻辑</td><td>任何依赖 <code>ui()</code> 方法的事情</td></tr>
+<tr><td>数据计算与转换</td></tr>
+</table></tbody></table>
+<h3>为什么需要分离？</h3>
+
+在 0.33 及之前，所有代码都在 <code>update(ctx, frame)</code> 中——逻辑和 UI 混合在一起，导致：
+<ul><li>代码难以阅读：数据处理和 UI 渲染交织</li>
+<li>测试困难：测试数据逻辑时必须模拟整个 UI 上下文</li>
+<li>职责不清：容易在 UI 代码中夹带副作用</li>
+</ul>
+0.34 的分离解决了这些问题——第 19 章会深入讲解数据流模式。
+
+<h3>示例：在 logic() 中处理快捷键</h3>
+
+<pre><code class="language-rust">fn logic(&amp;mut self, ctx: &amp;egui::Context, _frame: &amp;mut eframe::Frame) {
+    // 检查是否按下了 Ctrl+Z（撤销）
+    ctx.input(|i| {
+        if i.modifiers.ctrl &amp;&amp; i.key_pressed(egui::Key::Z) {
+            // 处理撤销逻辑
+            self.undo();
+        }
+    });
+}
+</code></pre>
+
+<code>ctx.input(|i| {...})</code> 是一个获取只读输入的惯用方式——传入闭包，闭包接收 <code>&amp;InputState</code>。
+
+<hr>
+
+<h2>3.3 <code>ui()</code> 详解</h2>
+
+<code>ui()</code> 是<strong>描述界面</strong>的地方：
+
+<pre><code class="language-rust">fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+    // 你的 UI 代码
+}
+</code></pre>
+
+<h3>核心原则</h3>
+<li><strong>UI 描述是每帧重新建立的</strong>——<code>ui.button()</code> 不会"创建"持久按钮，只是在当帧"说"这里有个按钮</li>
+<li><strong><code>ui()</code> 中不应有副作用</strong>——除了通过 <code>Response</code>（如 <code>.clicked()</code>）获取用户交互的结果来修改 <code>self</code></li>
+<li><strong>通过 <code>ui.ctx()</code> 访问 <code>Context</code></strong>——输入、样式、内存、字体等都通过 <code>ui.ctx()</code> 获取</li>
+
+<h3>ui() 获取用户交互的正确方式</h3>
+
+<pre><code class="language-rust">fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+    // ✅ 正确：通过 Response 获取交互结果
+    if ui.button("确认").clicked() {
+        self.confirmed = true;
+    }
+
+    // ✅ 正确：通过 changed() 检测输入变化
+    let response = ui.add(egui::TextEdit::singleline(&amp;mut self.name));
+    if response.changed() {
+        self.name_changed = true;
+    }
+}
+</code></pre>
+
+<pre><code class="language-rust">// ❌ 错误：在 ui() 中直接做网络请求
+fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+    // 这会在每帧都发起网络请求！应该放在 logic() 中
+    // let data = reqwest::blocking::get("https://...").unwrap();
+}
+</code></pre>
+
+<hr>
+
+<h2>3.4 <code>Frame</code> 与渲染控制</h2>
+
+<code>Frame</code> 是 eframe 提供的<strong>桌面框架上下文</strong>，通过 <code>logic()</code> 的第二个参数访问：
+
+<pre><code class="language-rust">fn logic(&amp;mut self, ctx: &amp;egui::Context, frame: &amp;mut eframe::Frame) {
+    // frame 提供以下能力：
+}
+</code></pre>
+
+<h3>Frame 的主要方法</h3>
+
+<table><thead><table><tr><td>方法</td><td>作用</td></tr></table></thead><tbody><table><tr><td><code>frame.info()</code></td><td>获取窗口信息（native_pixels_per_point 等）</td></tr>
+<tr><td><code>frame.storage()</code></td><td>获取持久化存储的引用（第 20 章）</td></tr>
+<tr><td><code>frame.request_repaint()</code></td><td>请求下一帧重绘（同 <code>ctx.request_repaint()</code>）</td></tr>
+<tr><td><code>frame.wgpu_render_state()</code></td><td>获取 wgpu 渲染状态（高级用法）</td></tr>
+<tr><td><code>frame.glow_render_state()</code></td><td>获取 glow 渲染状态（若使用 glow 后端）</td></tr>
+<tr><td><code>frame.set_window_title("...")</code></td><td>动态修改窗口标题</td></tr>
+</table></tbody></table>
+<h3>示例：在标题栏显示帧信息</h3>
+
+<pre><code class="language-rust">fn logic(&amp;mut self, ctx: &amp;egui::Context, frame: &amp;mut eframe::Frame) {
+    // 在标题栏显示当前帧的时间戳
+    frame.set_window_title(
+        format!("我的应用 - 时间: {:.1}", ctx.input(|i| i.time))
+    );
+}
+</code></pre>
+
+<hr>
+
+<h2>3.5 <code>Context</code> 是什么</h2>
+
+<code>Context</code> 是 egui 的<strong>中央枢纽</strong>——几乎所有操作都通过它进行。
+
+<pre><code class="language-rust">// Context 的核心访问方法
+ctx.input(|i| { ... });          // 读取输入状态（键盘、鼠标、IME）
+ctx.input_mut(|i| { ... });      // 可变访问（消费输入事件）
+ctx.style();                      // 读取当前样式
+ctx.global_style_mut(|style| { ... });   // 修改样式
+ctx.memory();                     // 读取 Memory（持久化状态）
+ctx.memory_mut(|mem| { ... });    // 修改 Memory
+ctx.request_repaint();            // 请求下一帧重绘
+ctx.request_repaint_after(dur);   // 延迟请求重绘
+ctx.output_mut(|o| { ... });      // 写入系统命令（复制、打开 URL 等）
+ctx.fonts(|f| { ... });           // 访问字体系统
+ctx.content_rect();                // 获取屏幕空间矩形
+</code></pre>
+
+<h3>Context 是"帧级临时对象"</h3>
+
+Context 的生命周期是一帧。你不能将它存储到 <code>MyApp</code> 中跨帧使用。每次 <code>logic()</code> 和 <code>ui()</code> 调用都传入一个新的 Context。
+
+<h3>对比：Context vs Frame vs Ui</h3>
+
+<table><thead><table><tr><td>对象</td><td>来源</td><td>职责</td></tr></table></thead><tbody><table><tr><td><code>Context</code></td><td><code>fn logic(ctx)</code> / <code>ui.ctx()</code></td><td>egui 核心功能（输入、样式、内存、输出）</td></tr>
+<tr><td><code>Frame</code></td><td><code>fn logic(ctx, frame)</code> / <code>fn ui(ui, frame)</code></td><td>eframe 特定功能（窗口管理、持久化存储）</td></tr>
+<tr><td><code>Ui</code></td><td><code>fn ui(ui, frame)</code> — 直接由 eframe 传入</td><td>布局和 Widget 构建</td></tr>
+</table></tbody></table>
+<blockquote><p>简单记忆：<code>Context</code> 是 egui 的，"<code>Frame</code>" 是 eframe 的，"<code>Ui</code>" 是布局的。在 <code>ui()</code> 中，<code>ui.ctx()</code> 获取 Context。</p></blockquote>
+
+<hr>
+
+<h2>3.6 验证你的理解</h2>
+
+在你的计数器项目中添加帧计数，验证理解：
+
+<pre><code class="language-rust">struct MyApp {
+    count: i32,
+    frame_count: u64,      // 新增：帧计数器
+    last_input_time: f64,   // 新增：上次输入时间
+}
+
+fn logic(&amp;mut self, ctx: &amp;egui::Context, _frame: &amp;mut eframe::Frame) {
+    // 每帧递增帧计数（注意：只在有输入变化时重绘，所以这不是"每秒帧数"）
+    self.frame_count += 1;
+
+    // 记录最新的输入时间
+    self.last_input_time = ctx.input(|i| i.time);
+}
+
+fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+    // 获取 Context 信息（必须在借用 ui 之前）
+    let screen_size = ui.ctx().content_rect().size();
+
+    ui.heading("帧循环验证");
+
+    ui.label(format!("计数器: {}", self.count));
+    if ui.button("+1").clicked() {
+        self.count += 1;
+    }
+
+    ui.separator();
+
+    // 显示帧信息
+    ui.label(format!("帧序号: {}", self.frame_count));
+    ui.label(format!("当前时间: {:.2}", self.last_input_time));
+    ui.label(format!("屏幕大小: {:?}", screen_size));
+}
+</code></pre>
+
+你可以观察到：只有当你点击按钮或移动鼠标时，帧序号才增长——这验证了"无输入则无重绘"的行为。
+
+<hr>
+
+<h2>本章小结</h2>
+<ul><li>每帧执行流程：输入收集 → <code>logic()</code> → <code>ui()</code> → 布局 → Tessellation → GPU 渲染</li>
+<li><code>logic()</code> — 数据和后台逻辑；<code>ui()</code> — 纯粹的 UI 描述</li>
+<li><code>Frame</code> — eframe 的桌面框架能力（窗口管理、存储）</li>
+<li><code>Context</code> — egui 的中央枢纽（输入、样式、内存、输出）</li>
+<li>egui 默认只在输入变化时重绘——这是性能优化的基础</li>
+</ul>
+<strong>下一章</strong>：开发工作流与项目结构——如何组织你的 egui 项目代码，以及提升开发效率的工具和配置。
+
+<hr>
+
+<blockquote><p>📁 完整可运行代码见下方源码框，或进入 <code>example/</code> 目录执行 <code>cargo run</code></p></blockquote>
+
+    
+<div class="source-box">
+  <div class="source-header">
+    <span>📄 src/main.rs — 完整可运行代码</span>
+    <span>
+      <a href="example/src/main.rs" target="_blank">查看源文件</a>
+      &nbsp;|&nbsp;
+      <span style="color:#a6e3a1">cd example &amp;&amp; cargo run</span>
+    </span>
+  </div>
+  <pre><code class="language-rust">use eframe::egui;
+
+fn main() -&gt; eframe::Result&lt;()&gt; {
+    let native_options = eframe::NativeOptions::default();
+
+    eframe::run_native(
+        "帧循环验证",
+        native_options,
+        Box::new(|_cc| Ok(Box::new(MyApp::default()))),
+    )
+}
+
+/// 应用状态
+struct MyApp {
+    count: i32,
+    frame_count: u64,      // 帧序号：证明"无输入不重绘"
+    last_input_time: f64,   // egui 内部时钟（秒）
+}
+
+impl Default for MyApp {
+    fn default() -&gt; Self {
+        Self {
+            count: 0,
+            frame_count: 0,
+            last_input_time: 0.0,
+        }
+    }
+}
+
+impl eframe::App for MyApp {
+    /// 帧逻辑：跟踪帧计数和时间
+    fn logic(&amp;mut self, ctx: &amp;egui::Context, _frame: &amp;mut eframe::Frame) {
+        self.frame_count += 1;
+        self.last_input_time = ctx.input(|i| i.time);
+    }
+
+    /// UI 渲染：显示帧信息和计数器
+    fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+        // 从 Context 获取信息（在 ui 被借用之前）
+        let (width, height) = {
+            let ctx = ui.ctx();
+            let r = ctx.content_rect();
+            (r.width(), r.height())
+        };
+
+        ui.heading("帧循环验证");
+        ui.separator();
+
+        // --- 交互区 ---
+        ui.horizontal(|ui| {
+            if ui.button("+1").clicked() {
+                self.count += 1;
+            }
+            if ui.button("-1").clicked() {
+                self.count -= 1;
+            }
+            if ui.button("重置").clicked() {
+                self.count = 0;
+            }
+        });
+        ui.label(format!("计数器当前值: {}", self.count));
+        ui.separator();
+
+        // --- 帧信息区 ---
+        ui.label(format!("帧序号: {}", self.frame_count));
+        ui.label(format!("egui 时钟: {:.3} 秒", self.last_input_time));
+        ui.label(format!("窗口尺寸: {:.0} x {:.0}", width, height));
+        ui.separator();
+
+        // --- 说明区 ---
+        ui.label("提示：仅在移动鼠标或点击按钮时帧序号才增长");
+        ui.label("这证明 egui 默认只在有输入事件时才重绘");
+    }
+}
+</code></pre>
+</div>
+  </main>
+</body>
+</html>

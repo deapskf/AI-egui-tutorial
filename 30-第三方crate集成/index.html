@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第三方crate集成 — EGUI 全面教程</title>
+  <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;line-height:1.75;color:#1a1a2e;background:#f8f9fa}
+#sidebar{width:280px;min-width:280px;height:100vh;position:fixed;left:0;top:0;overflow-y:auto;background:#1e1e2e;color:#cdd6f4;padding:24px 16px;z-index:10}
+#sidebar h2{font-size:1.1em;color:#f5c2e7;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #45475a}
+#sidebar ol{list-style:none;padding:0}
+#sidebar ol li{margin:2px 0;font-size:.88em}
+#sidebar ol li.part-title{font-weight:700;color:#a6e3a1;margin-top:14px;margin-bottom:4px;font-size:.78em;text-transform:uppercase;letter-spacing:.5px}
+#sidebar a{color:#bac2de;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;transition:background .15s}
+#sidebar a:hover{background:#45475a;color:#fff}
+#sidebar a.active{background:#cba6f7;color:#1e1e2e;font-weight:600}
+#content{margin-left:280px;max-width:860px;padding:40px 60px 100px;background:#fff;min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,.05)}
+#content h1{font-size:2em;margin-bottom:8px;color:#11111b}
+#content h2{font-size:1.45em;margin-top:36px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #cba6f7;color:#313244}
+#content h3{font-size:1.15em;margin-top:24px;margin-bottom:8px;color:#45475a}
+#content h4{font-size:1.05em;margin-top:16px;margin-bottom:6px;color:#585b70}
+#content p{margin:10px 0}
+#content ul,#content ol{margin:10px 0 10px 24px}
+#content li{margin:4px 0}
+#content a{color:#8839ef}
+#content code{background:#e6e9ef;padding:2px 6px;border-radius:4px;font-family:"Fira Code","Cascadia Code","JetBrains Mono","Source Code Pro","Noto Sans Mono SC",monospace;font-size:.9em;color:#d20f39}
+#content pre{background:#1e1e2e;color:#cdd6f4;padding:18px 20px;border-radius:8px;overflow-x:auto;margin:14px 0;line-height:1.55;font-size:.9em}
+#content pre code{background:none;color:#cdd6f4;padding:0;font-size:inherit}
+#content table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em}
+#content th,#content td{border:1px solid #dce0e8;padding:8px 12px;text-align:left}
+#content th{background:#e6e9ef;font-weight:700}
+#content tr:nth-child(even){background:#f8f9fb}
+#content hr{margin:28px 0;border:none;border-top:1px solid #dce0e8}
+#content blockquote{border-left:4px solid #cba6f7;padding:8px 16px;margin:14px 0;background:#f5f3ff;border-radius:0 6px 6px 0;color:#45475a}
+#content blockquote p:last-child{margin-bottom:0}
+#content img{max-width:100%;border-radius:6px;margin:12px 0}
+.source-box{background:#1e1e2e;border-radius:8px;margin:16px 0;overflow:hidden}
+.source-box .source-header{background:#313244;color:#cdd6f4;padding:10px 16px;font-size:.85em;display:flex;justify-content:space-between;align-items:center}
+.source-box .source-header a{color:#cba6f7;text-decoration:none;font-size:.8em}
+.source-box pre{margin:0;border-radius:0}
+@media(max-width:840px){#sidebar{display:none}#content{margin-left:0;padding:24px 20px}}
+@media print{#sidebar{display:none}#content{margin-left:0;box-shadow:none}}
+</style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2><a href="../index.html" style="color:#f5c2e7;text-decoration:none;">📘 EGUI 全面教程</a></h2>
+    <ol><li class="part-title">第一部分：入门篇</li><li><a href="../01-egui是什么/index.html">egui是什么</a></li><li><a href="../02-实战入门/index.html">实战入门</a></li><li><a href="../03-App-trait与帧循环/index.html">App-trait与帧循环</a></li><li><a href="../04-开发工作流/index.html">开发工作流</a></li><li class="part-title">第二部分：基础组件篇</li><li><a href="../05-文本与标签/index.html">文本与标签</a></li><li><a href="../06-按钮/index.html">按钮</a></li><li><a href="../07-输入框/index.html">输入框</a></li><li><a href="../08-复选框与开关/index.html">复选框与开关</a></li><li><a href="../09-数值输入/index.html">数值输入</a></li><li><a href="../10-下拉框与列表选择/index.html">下拉框与列表选择</a></li><li class="part-title">第三部分：布局系统</li><li><a href="../11-布局模型/index.html">布局模型</a></li><li><a href="../12-水平与垂直排列/index.html">水平与垂直排列</a></li><li><a href="../13-Grid与列布局/index.html">Grid与列布局</a></li><li><a href="../14-滚动区域/index.html">滚动区域</a></li><li><a href="../15-面板系统/index.html">面板系统</a></li><li class="part-title">第四部分：窗口与弹窗</li><li><a href="../16-窗口/index.html">窗口</a></li><li><a href="../17-右键菜单与弹窗/index.html">右键菜单与弹窗</a></li><li class="part-title">第五部分：状态管理</li><li><a href="../18-状态管理模型/index.html">状态管理模型</a></li><li><a href="../19-帧逻辑分离/index.html">帧逻辑分离</a></li><li><a href="../20-持久化/index.html">持久化</a></li><li class="part-title">第六部分：样式与主题</li><li><a href="../21-Style与Visuals/index.html">Style与Visuals</a></li><li><a href="../22-自定义字体/index.html">自定义字体</a></li><li><a href="../23-主题定制/index.html">主题定制</a></li><li class="part-title">第七部分：自定义绘制</li><li><a href="../24-Painter与Shape/index.html">Painter与Shape</a></li><li><a href="../25-自定义Widget/index.html">自定义Widget</a></li><li><a href="../26-交互式绘制/index.html">交互式绘制</a></li><li class="part-title">第八部分：生态集成</li><li><a href="../27-egui-extras/index.html">egui-extras</a></li><li><a href="../28-egui-plot/index.html">egui-plot</a></li><li><a href="../29-egui-phosphor/index.html">egui-phosphor</a></li><li><a class="active" href="../30-第三方crate集成/index.html">第三方crate集成</a></li><li><a href="../31-tokio与egui/index.html">tokio与egui</a></li><li class="part-title">第九部分：高级特性</li><li><a href="../32-动画/index.html">动画</a></li><li><a href="../33-拖拽与放置/index.html">拖拽与放置</a></li><li><a href="../34-输入处理/index.html">输入处理</a></li><li><a href="../35-多窗口/index.html">多窗口</a></li><li><a href="../36-性能优化/index.html">性能优化</a></li><li><a href="../37-常见陷阱与调试/index.html">常见陷阱与调试</a></li><li class="part-title">第十部分：深入原理</li><li><a href="../38-Immediate-Mode哲学/index.html">Immediate-Mode哲学</a></li><li><a href="../39-egui架构/index.html">egui架构</a></li><li><a href="../40-手写极简IMGUI/index.html">手写极简IMGUI</a></li><li><a href="../41-手动集成/index.html">手动集成</a></li><li><a href="../42-渲染管线/index.html">渲染管线</a></li><li class="part-title">第十一部分：工程实践</li><li><a href="../43-测试/index.html">测试</a></li><li><a href="../44-打包与分发/index.html">打包与分发</a></li><li><a href="../45-bevy-egui/index.html">bevy-egui</a></li><li class="part-title">附录</li><li><a href="../附录A-Widget速查表/index.html">附录 A · Widget速查表</a></li><li><a href="../附录B-Style-Visuals参考/index.html">附录 B · Style-Visuals参考</a></li><li><a href="../附录C-常见错误/index.html">附录 C · 常见错误</a></li><li><a href="../附录D-延伸阅读/index.html">附录 D · 延伸阅读</a></li></ol>
+  </nav>
+  <main id="content">
+    <p style="color:#8839ef;font-size:0.85em;margin-bottom:0;">第八部分：生态集成</p>
+    <p>
+﻿# 30 · 第三方 crate 集成
+</p>
+<p>
+本章讲解如何将 egui 与 Rust 生态中的常用 crate 配合使用。
+</p>
+<hr>
+<h2>30.1 图片加载与显示</h2>
+<pre><code class="language-toml">image = { version = "0.25", features = ["png", "jpeg"] }
+</code></pre>
+
+<pre><code class="language-rust">use eframe::egui::{self, ColorImage, TextureOptions};
+
+// 从文件加载图片到 CPU 端
+let img = image::open("photo.jpg").unwrap().to_rgba8();
+let size = [img.width() as _, img.height() as _];
+let pixels = img.into_raw();
+
+// 创建 ColorImage
+let color_image = ColorImage::from_rgba_unmultiplied(size, &amp;pixels);
+
+// 上传到 GPU，获取纹理
+let texture = ui.ctx().load_texture(
+    "my_photo",
+    color_image,
+    TextureOptions::LINEAR, // LINEAR = 平滑缩放, NEAREST = 像素风
+);
+
+// 显示图片
+ui.image(texture.id(), texture.size_vec2());
+</code></pre>
+
+<h3>RetainedImage 简化版</h3>
+
+<pre><code class="language-rust">use egui_extras::RetainedImage;
+
+let img = RetainedImage::from_image_bytes("photo", &amp;std::fs::read("photo.jpg").unwrap())
+    .unwrap()
+    .with_options(egui::TextureOptions::NEAREST); // 像素风纹理
+
+ui.image(img.texture_id(ui.ctx()), img.size_vec2());
+</code></pre>
+
+<hr>
+
+<h2>30.2 rfd — 原生文件对话框</h2>
+
+<pre><code class="language-toml">rfd = "0.15"
+</code></pre>
+
+<pre><code class="language-rust">fn logic(&amp;mut self, _ctx: &amp;egui::Context, _frame: &amp;mut eframe::Frame) {
+    // 打开文件
+    if self.open_file_requested {
+        if let Some(path) = rfd::FileDialog::new()
+            .add_filter("图片", &amp;["png", "jpg", "jpeg"])
+            .pick_file()
+        {
+            self.load_image_from_path(&amp;path);
+        }
+        self.open_file_requested = false;
+    }
+}
+
+fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+    if ui.button("打开图片").clicked() {
+        self.open_file_requested = true;  // 设置标志，在 logic 中处理
+    }
+}
+</code></pre>
+
+<hr>
+
+<h2>30.3 log / env_logger 调试日志</h2>
+
+<pre><code class="language-toml">log = "0.4"
+env_logger = "0.11"
+</code></pre>
+
+<pre><code class="language-rust">fn main() {
+    env_logger::init(); // 初始化
+    log::info!("应用启动");
+    // eframe::run_native(...)
+}
+
+// 在应用中任意位置
+fn logic(&amp;mut self, ...) {
+    log::debug!("帧逻辑: count={}", self.count);
+}
+</code></pre>
+
+<pre><code class="language-"># 运行
+RUST_LOG=debug cargo run
+</code></pre>
+
+<hr>
+
+<h2>30.4 chrono — 时间格式化</h2>
+
+<pre><code class="language-toml">chrono = "0.4"
+</code></pre>
+
+<pre><code class="language-rust">use chrono::Local;
+
+fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+    let now = Local::now();
+    ui.label(format!("当前时间: {}", now.format("%Y-%m-%d %H:%M:%S")));
+}
+</code></pre>
+
+<hr>
+
+<h2>本章小结</h2>
+<ul><li><code>image</code> + <code>ctx.load_texture()</code> → 显示图片</li>
+<li><code>rfd::FileDialog</code> → 原生文件打开/保存对话框</li>
+<li><code>log</code> + <code>env_logger</code> → 调试输出</li>
+<li><code>chrono</code> → 时间格式化和显示</li>
+</ul>
+<strong>下一章</strong>：tokio 与 egui —— 异步编程入门。
+
+<hr>
+
+<blockquote><p>📁 完整可运行代码见下方源码框，或进入 <code>example/</code> 目录执行 <code>cargo run</code></p></blockquote>
+
+    
+<div class="source-box">
+  <div class="source-header">
+    <span>📄 src/main.rs — 完整可运行代码</span>
+    <span>
+      <a href="example/src/main.rs" target="_blank">查看源文件</a>
+      &nbsp;|&nbsp;
+      <span style="color:#a6e3a1">cd example &amp;&amp; cargo run</span>
+    </span>
+  </div>
+  <pre><code class="language-rust">use eframe::egui;
+
+fn main() -&gt; eframe::Result&lt;()&gt; {
+    eframe::run_native("第三方crate集成", eframe::NativeOptions::default(), Box::new(|_cc| Ok(Box::new(MyApp::default()))))
+}
+
+struct MyApp { time_str: String, log_output: String }
+
+impl Default for MyApp { fn default() -&gt; Self { Self { time_str: String::new(), log_output: String::new() } } }
+
+impl eframe::App for MyApp {
+    fn logic(&amp;mut self, _ctx: &amp;egui::Context, _frame: &amp;mut eframe::Frame) {
+        // 使用 chrono 更新时间
+        self.time_str = chrono::Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+    }
+
+    fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+        ui.heading("第三方 crate 集成演示");
+
+        ui.label(format!("当前时间: {}", self.time_str));
+        ui.separator();
+
+        // rfd 文件对话框
+        if ui.button("打开文件对话框").clicked() {
+            if let Some(path) = rfd::FileDialog::new().pick_file() {
+                self.log_output = format!("选择了: {}", path.display());
+            }
+        }
+
+        if ui.button("保存文件对话框").clicked() {
+            if let Some(path) = rfd::FileDialog::new().save_file() {
+                self.log_output = format!("保存到: {}", path.display());
+            }
+        }
+
+        ui.separator();
+        ui.label(format!("日志: {}", self.log_output));
+
+        ui.separator();
+        ui.label("提示: 日志输出可通过 RUST_LOG=debug cargo run 查看");
+        log::info!("UI 已渲染");
+    }
+}
+</code></pre>
+</div>
+  </main>
+</body>
+</html>

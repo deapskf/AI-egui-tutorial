@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>附录 B · Style-Visuals参考 — EGUI 全面教程</title>
+  <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;line-height:1.75;color:#1a1a2e;background:#f8f9fa}
+#sidebar{width:280px;min-width:280px;height:100vh;position:fixed;left:0;top:0;overflow-y:auto;background:#1e1e2e;color:#cdd6f4;padding:24px 16px;z-index:10}
+#sidebar h2{font-size:1.1em;color:#f5c2e7;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #45475a}
+#sidebar ol{list-style:none;padding:0}
+#sidebar ol li{margin:2px 0;font-size:.88em}
+#sidebar ol li.part-title{font-weight:700;color:#a6e3a1;margin-top:14px;margin-bottom:4px;font-size:.78em;text-transform:uppercase;letter-spacing:.5px}
+#sidebar a{color:#bac2de;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;transition:background .15s}
+#sidebar a:hover{background:#45475a;color:#fff}
+#sidebar a.active{background:#cba6f7;color:#1e1e2e;font-weight:600}
+#content{margin-left:280px;max-width:860px;padding:40px 60px 100px;background:#fff;min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,.05)}
+#content h1{font-size:2em;margin-bottom:8px;color:#11111b}
+#content h2{font-size:1.45em;margin-top:36px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #cba6f7;color:#313244}
+#content h3{font-size:1.15em;margin-top:24px;margin-bottom:8px;color:#45475a}
+#content h4{font-size:1.05em;margin-top:16px;margin-bottom:6px;color:#585b70}
+#content p{margin:10px 0}
+#content ul,#content ol{margin:10px 0 10px 24px}
+#content li{margin:4px 0}
+#content a{color:#8839ef}
+#content code{background:#e6e9ef;padding:2px 6px;border-radius:4px;font-family:"Fira Code","Cascadia Code","JetBrains Mono","Source Code Pro","Noto Sans Mono SC",monospace;font-size:.9em;color:#d20f39}
+#content pre{background:#1e1e2e;color:#cdd6f4;padding:18px 20px;border-radius:8px;overflow-x:auto;margin:14px 0;line-height:1.55;font-size:.9em}
+#content pre code{background:none;color:#cdd6f4;padding:0;font-size:inherit}
+#content table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em}
+#content th,#content td{border:1px solid #dce0e8;padding:8px 12px;text-align:left}
+#content th{background:#e6e9ef;font-weight:700}
+#content tr:nth-child(even){background:#f8f9fb}
+#content hr{margin:28px 0;border:none;border-top:1px solid #dce0e8}
+#content blockquote{border-left:4px solid #cba6f7;padding:8px 16px;margin:14px 0;background:#f5f3ff;border-radius:0 6px 6px 0;color:#45475a}
+#content blockquote p:last-child{margin-bottom:0}
+#content img{max-width:100%;border-radius:6px;margin:12px 0}
+.source-box{background:#1e1e2e;border-radius:8px;margin:16px 0;overflow:hidden}
+.source-box .source-header{background:#313244;color:#cdd6f4;padding:10px 16px;font-size:.85em;display:flex;justify-content:space-between;align-items:center}
+.source-box .source-header a{color:#cba6f7;text-decoration:none;font-size:.8em}
+.source-box pre{margin:0;border-radius:0}
+@media(max-width:840px){#sidebar{display:none}#content{margin-left:0;padding:24px 20px}}
+@media print{#sidebar{display:none}#content{margin-left:0;box-shadow:none}}
+</style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2><a href="../index.html" style="color:#f5c2e7;text-decoration:none;">📘 EGUI 全面教程</a></h2>
+    <ol><li class="part-title">第一部分：入门篇</li><li><a href="../01-egui是什么/index.html">egui是什么</a></li><li><a href="../02-实战入门/index.html">实战入门</a></li><li><a href="../03-App-trait与帧循环/index.html">App-trait与帧循环</a></li><li><a href="../04-开发工作流/index.html">开发工作流</a></li><li class="part-title">第二部分：基础组件篇</li><li><a href="../05-文本与标签/index.html">文本与标签</a></li><li><a href="../06-按钮/index.html">按钮</a></li><li><a href="../07-输入框/index.html">输入框</a></li><li><a href="../08-复选框与开关/index.html">复选框与开关</a></li><li><a href="../09-数值输入/index.html">数值输入</a></li><li><a href="../10-下拉框与列表选择/index.html">下拉框与列表选择</a></li><li class="part-title">第三部分：布局系统</li><li><a href="../11-布局模型/index.html">布局模型</a></li><li><a href="../12-水平与垂直排列/index.html">水平与垂直排列</a></li><li><a href="../13-Grid与列布局/index.html">Grid与列布局</a></li><li><a href="../14-滚动区域/index.html">滚动区域</a></li><li><a href="../15-面板系统/index.html">面板系统</a></li><li class="part-title">第四部分：窗口与弹窗</li><li><a href="../16-窗口/index.html">窗口</a></li><li><a href="../17-右键菜单与弹窗/index.html">右键菜单与弹窗</a></li><li class="part-title">第五部分：状态管理</li><li><a href="../18-状态管理模型/index.html">状态管理模型</a></li><li><a href="../19-帧逻辑分离/index.html">帧逻辑分离</a></li><li><a href="../20-持久化/index.html">持久化</a></li><li class="part-title">第六部分：样式与主题</li><li><a href="../21-Style与Visuals/index.html">Style与Visuals</a></li><li><a href="../22-自定义字体/index.html">自定义字体</a></li><li><a href="../23-主题定制/index.html">主题定制</a></li><li class="part-title">第七部分：自定义绘制</li><li><a href="../24-Painter与Shape/index.html">Painter与Shape</a></li><li><a href="../25-自定义Widget/index.html">自定义Widget</a></li><li><a href="../26-交互式绘制/index.html">交互式绘制</a></li><li class="part-title">第八部分：生态集成</li><li><a href="../27-egui-extras/index.html">egui-extras</a></li><li><a href="../28-egui-plot/index.html">egui-plot</a></li><li><a href="../29-egui-phosphor/index.html">egui-phosphor</a></li><li><a href="../30-第三方crate集成/index.html">第三方crate集成</a></li><li><a href="../31-tokio与egui/index.html">tokio与egui</a></li><li class="part-title">第九部分：高级特性</li><li><a href="../32-动画/index.html">动画</a></li><li><a href="../33-拖拽与放置/index.html">拖拽与放置</a></li><li><a href="../34-输入处理/index.html">输入处理</a></li><li><a href="../35-多窗口/index.html">多窗口</a></li><li><a href="../36-性能优化/index.html">性能优化</a></li><li><a href="../37-常见陷阱与调试/index.html">常见陷阱与调试</a></li><li class="part-title">第十部分：深入原理</li><li><a href="../38-Immediate-Mode哲学/index.html">Immediate-Mode哲学</a></li><li><a href="../39-egui架构/index.html">egui架构</a></li><li><a href="../40-手写极简IMGUI/index.html">手写极简IMGUI</a></li><li><a href="../41-手动集成/index.html">手动集成</a></li><li><a href="../42-渲染管线/index.html">渲染管线</a></li><li class="part-title">第十一部分：工程实践</li><li><a href="../43-测试/index.html">测试</a></li><li><a href="../44-打包与分发/index.html">打包与分发</a></li><li><a href="../45-bevy-egui/index.html">bevy-egui</a></li><li class="part-title">附录</li><li><a href="../附录A-Widget速查表/index.html">附录 A · Widget速查表</a></li><li><a class="active" href="../附录B-Style-Visuals参考/index.html">附录 B · Style-Visuals参考</a></li><li><a href="../附录C-常见错误/index.html">附录 C · 常见错误</a></li><li><a href="../附录D-延伸阅读/index.html">附录 D · 延伸阅读</a></li></ol>
+  </nav>
+  <main id="content">
+    <p style="color:#8839ef;font-size:0.85em;margin-bottom:0;">附录</p>
+    <p>
+﻿# 附录 B · Style / Visuals 字段参考
+</p>
+<h2>Style</h2>
+<table><thead><table><tr><td>字段</td><td>类型</td><td>默认</td><td>说明</td></tr></table></thead><tbody><table><tr><td><code>spacing.item_spacing</code></td><td><code>Vec2</code></td><td><code>(6, 3)</code></td><td>控件间距</td></tr>
+<tr><td><code>spacing.button_padding</code></td><td><code>Vec2</code></td><td><code>(6, 2)</code></td><td>按钮内边距</td></tr>
+<tr><td><code>spacing.indent</code></td><td><code>f32</code></td><td><code>14.0</code></td><td>缩进宽度</td></tr>
+<tr><td><code>spacing.icon_width</code></td><td><code>f32</code></td><td><code>14.0</code></td><td>图标列宽</td></tr>
+<tr><td><code>interaction.tooltip_delay</code></td><td><code>f32</code></td><td><code>0.5</code></td><td>tooltip 延迟</td></tr>
+<tr><td><code>interaction.double_click_delay</code></td><td><code>f32</code></td><td><code>0.4</code></td><td>双击延迟</td></tr>
+<tr><td><code>animation_time</code></td><td><code>f32</code></td><td><code>0.1</code></td><td>默认动画时长</td></tr>
+</table></tbody></table>
+<h2>Visuals</h2>
+<table><thead><table><tr><td>字段</td><td>说明</td></tr></table></thead><tbody><table><tr><td><code>dark_mode</code></td><td>是否暗色模式</td></tr>
+<tr><td><code>override_text_color</code></td><td><code>Option&lt;Color32&gt;</code> — 覆盖所有文本颜色</td></tr>
+<tr><td><code>widgets.noninteractive</code></td><td>不可交互控件的颜色组</td></tr>
+<tr><td><code>widgets.inactive</code></td><td>非活动控件的颜色组</td></tr>
+<tr><td><code>widgets.hovered</code></td><td>悬停控件的颜色组</td></tr>
+<tr><td><code>widgets.active</code></td><td>按下控件的颜色组</td></tr>
+<tr><td><code>widgets.open</code></td><td>展开状态控件的颜色组</td></tr>
+<tr><td><code>selection.bg_fill</code></td><td>文本选中背景色</td></tr>
+<tr><td><code>selection.stroke</code></td><td>文本选中边框</td></tr>
+<tr><td><code>window_rounding</code></td><td><code>Rounding</code> — 窗口圆角（默认 <code>(8, 8)</code>）</td></tr>
+<tr><td><code>widgets.noninteractive.rounding</code></td><td><code>Rounding</code> — 控件圆角（默认 <code>(4, 4)</code>）</td></tr>
+</table></tbody></table>
+<h2>常用颜色构造</h2>
+<pre><code class="language-rust">Color32::RED / GREEN / BLUE / WHITE / BLACK / GRAY
+Color32::TRANSPARENT
+Color32::from_rgb(r, g, b)
+Color32::from_rgba_unmultiplied(r, g, b, a)
+</code></pre>
+
+    
+  </main>
+</body>
+</html>

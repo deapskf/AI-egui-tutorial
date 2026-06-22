@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>复选框与开关 — EGUI 全面教程</title>
+  <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;line-height:1.75;color:#1a1a2e;background:#f8f9fa}
+#sidebar{width:280px;min-width:280px;height:100vh;position:fixed;left:0;top:0;overflow-y:auto;background:#1e1e2e;color:#cdd6f4;padding:24px 16px;z-index:10}
+#sidebar h2{font-size:1.1em;color:#f5c2e7;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #45475a}
+#sidebar ol{list-style:none;padding:0}
+#sidebar ol li{margin:2px 0;font-size:.88em}
+#sidebar ol li.part-title{font-weight:700;color:#a6e3a1;margin-top:14px;margin-bottom:4px;font-size:.78em;text-transform:uppercase;letter-spacing:.5px}
+#sidebar a{color:#bac2de;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;transition:background .15s}
+#sidebar a:hover{background:#45475a;color:#fff}
+#sidebar a.active{background:#cba6f7;color:#1e1e2e;font-weight:600}
+#content{margin-left:280px;max-width:860px;padding:40px 60px 100px;background:#fff;min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,.05)}
+#content h1{font-size:2em;margin-bottom:8px;color:#11111b}
+#content h2{font-size:1.45em;margin-top:36px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #cba6f7;color:#313244}
+#content h3{font-size:1.15em;margin-top:24px;margin-bottom:8px;color:#45475a}
+#content h4{font-size:1.05em;margin-top:16px;margin-bottom:6px;color:#585b70}
+#content p{margin:10px 0}
+#content ul,#content ol{margin:10px 0 10px 24px}
+#content li{margin:4px 0}
+#content a{color:#8839ef}
+#content code{background:#e6e9ef;padding:2px 6px;border-radius:4px;font-family:"Fira Code","Cascadia Code","JetBrains Mono","Source Code Pro","Noto Sans Mono SC",monospace;font-size:.9em;color:#d20f39}
+#content pre{background:#1e1e2e;color:#cdd6f4;padding:18px 20px;border-radius:8px;overflow-x:auto;margin:14px 0;line-height:1.55;font-size:.9em}
+#content pre code{background:none;color:#cdd6f4;padding:0;font-size:inherit}
+#content table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em}
+#content th,#content td{border:1px solid #dce0e8;padding:8px 12px;text-align:left}
+#content th{background:#e6e9ef;font-weight:700}
+#content tr:nth-child(even){background:#f8f9fb}
+#content hr{margin:28px 0;border:none;border-top:1px solid #dce0e8}
+#content blockquote{border-left:4px solid #cba6f7;padding:8px 16px;margin:14px 0;background:#f5f3ff;border-radius:0 6px 6px 0;color:#45475a}
+#content blockquote p:last-child{margin-bottom:0}
+#content img{max-width:100%;border-radius:6px;margin:12px 0}
+.source-box{background:#1e1e2e;border-radius:8px;margin:16px 0;overflow:hidden}
+.source-box .source-header{background:#313244;color:#cdd6f4;padding:10px 16px;font-size:.85em;display:flex;justify-content:space-between;align-items:center}
+.source-box .source-header a{color:#cba6f7;text-decoration:none;font-size:.8em}
+.source-box pre{margin:0;border-radius:0}
+@media(max-width:840px){#sidebar{display:none}#content{margin-left:0;padding:24px 20px}}
+@media print{#sidebar{display:none}#content{margin-left:0;box-shadow:none}}
+</style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2><a href="../index.html" style="color:#f5c2e7;text-decoration:none;">📘 EGUI 全面教程</a></h2>
+    <ol><li class="part-title">第一部分：入门篇</li><li><a href="../01-egui是什么/index.html">egui是什么</a></li><li><a href="../02-实战入门/index.html">实战入门</a></li><li><a href="../03-App-trait与帧循环/index.html">App-trait与帧循环</a></li><li><a href="../04-开发工作流/index.html">开发工作流</a></li><li class="part-title">第二部分：基础组件篇</li><li><a href="../05-文本与标签/index.html">文本与标签</a></li><li><a href="../06-按钮/index.html">按钮</a></li><li><a href="../07-输入框/index.html">输入框</a></li><li><a class="active" href="../08-复选框与开关/index.html">复选框与开关</a></li><li><a href="../09-数值输入/index.html">数值输入</a></li><li><a href="../10-下拉框与列表选择/index.html">下拉框与列表选择</a></li><li class="part-title">第三部分：布局系统</li><li><a href="../11-布局模型/index.html">布局模型</a></li><li><a href="../12-水平与垂直排列/index.html">水平与垂直排列</a></li><li><a href="../13-Grid与列布局/index.html">Grid与列布局</a></li><li><a href="../14-滚动区域/index.html">滚动区域</a></li><li><a href="../15-面板系统/index.html">面板系统</a></li><li class="part-title">第四部分：窗口与弹窗</li><li><a href="../16-窗口/index.html">窗口</a></li><li><a href="../17-右键菜单与弹窗/index.html">右键菜单与弹窗</a></li><li class="part-title">第五部分：状态管理</li><li><a href="../18-状态管理模型/index.html">状态管理模型</a></li><li><a href="../19-帧逻辑分离/index.html">帧逻辑分离</a></li><li><a href="../20-持久化/index.html">持久化</a></li><li class="part-title">第六部分：样式与主题</li><li><a href="../21-Style与Visuals/index.html">Style与Visuals</a></li><li><a href="../22-自定义字体/index.html">自定义字体</a></li><li><a href="../23-主题定制/index.html">主题定制</a></li><li class="part-title">第七部分：自定义绘制</li><li><a href="../24-Painter与Shape/index.html">Painter与Shape</a></li><li><a href="../25-自定义Widget/index.html">自定义Widget</a></li><li><a href="../26-交互式绘制/index.html">交互式绘制</a></li><li class="part-title">第八部分：生态集成</li><li><a href="../27-egui-extras/index.html">egui-extras</a></li><li><a href="../28-egui-plot/index.html">egui-plot</a></li><li><a href="../29-egui-phosphor/index.html">egui-phosphor</a></li><li><a href="../30-第三方crate集成/index.html">第三方crate集成</a></li><li><a href="../31-tokio与egui/index.html">tokio与egui</a></li><li class="part-title">第九部分：高级特性</li><li><a href="../32-动画/index.html">动画</a></li><li><a href="../33-拖拽与放置/index.html">拖拽与放置</a></li><li><a href="../34-输入处理/index.html">输入处理</a></li><li><a href="../35-多窗口/index.html">多窗口</a></li><li><a href="../36-性能优化/index.html">性能优化</a></li><li><a href="../37-常见陷阱与调试/index.html">常见陷阱与调试</a></li><li class="part-title">第十部分：深入原理</li><li><a href="../38-Immediate-Mode哲学/index.html">Immediate-Mode哲学</a></li><li><a href="../39-egui架构/index.html">egui架构</a></li><li><a href="../40-手写极简IMGUI/index.html">手写极简IMGUI</a></li><li><a href="../41-手动集成/index.html">手动集成</a></li><li><a href="../42-渲染管线/index.html">渲染管线</a></li><li class="part-title">第十一部分：工程实践</li><li><a href="../43-测试/index.html">测试</a></li><li><a href="../44-打包与分发/index.html">打包与分发</a></li><li><a href="../45-bevy-egui/index.html">bevy-egui</a></li><li class="part-title">附录</li><li><a href="../附录A-Widget速查表/index.html">附录 A · Widget速查表</a></li><li><a href="../附录B-Style-Visuals参考/index.html">附录 B · Style-Visuals参考</a></li><li><a href="../附录C-常见错误/index.html">附录 C · 常见错误</a></li><li><a href="../附录D-延伸阅读/index.html">附录 D · 延伸阅读</a></li></ol>
+  </nav>
+  <main id="content">
+    <p style="color:#8839ef;font-size:0.85em;margin-bottom:0;">第二部分：基础组件篇</p>
+    <p>
+﻿# 08 · 复选框与开关
+</p>
+<p>
+复选框、开关、可选中标签——三种控制布尔状态或选项选择的控件。
+</p>
+<hr>
+<h2>8.1 <code>Checkbox</code> 复选框</h2>
+<pre><code class="language-rust">ui.checkbox(&amp;mut self.enable_audio, "启用音频");
+//        ^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^
+//        绑定的 bool 变量              标签文本
+</code></pre>
+<ul><li>点击复选框或标签文字都可切换</li>
+<li>返回 <code>Response</code>，可用 <code>.changed()</code> 检测变化</li>
+</ul>
+<h3>不带文字</h3>
+
+<pre><code class="language-rust">ui.checkbox(&amp;mut self.checked, "");       // 空字符串
+// 或直接用 add
+ui.add(egui::Checkbox::without_text(&amp;mut self.checked));
+</code></pre>
+
+<h3>RichText 标签</h3>
+
+<pre><code class="language-rust">ui.checkbox(
+    &amp;mut self.dangerous,
+    RichText::new("危险操作").color(Color32::RED).strong(),
+);
+</code></pre>
+
+<hr>
+
+<h2>8.2 开关（Toggle）</h2>
+
+外观类似移动端的 toggle 开关。egui 0.34 中 <code>Switch</code> 已移除，可以使用 <code>selectable_label</code> 或 <code>Checkbox</code> 模拟：
+
+<pre><code class="language-rust">// 使用 selectable_label 模拟开关效果
+ui.horizontal(|ui| {
+    ui.label("Wi-Fi:");
+    if ui.selectable_label(self.wifi_enabled, if self.wifi_enabled { "● 开" } else { "○ 关" }).clicked() {
+        self.wifi_enabled = !self.wifi_enabled;
+    }
+});
+
+// 或直接用 Checkbox（功能等价，外观不同）
+ui.checkbox(&amp;mut self.wifi_enabled, "Wi-Fi");
+</code></pre>
+
+与 Checkbox 的区别（概念层面）：
+<ul><li>Toggle/Switch — 视觉上更现代，适合设置页</li>
+<li>Checkbox — 更传统，适合表单/多选列表</li>
+</ul>
+<hr>
+
+<h2>8.3 <code>SelectableLabel</code> 可选中标签</h2>
+
+用于列表选择或单选/多选场景：
+
+<pre><code class="language-rust">// 单选模式（模仿 radio）
+for (i, item) in self.items.iter().enumerate() {
+    if ui.selectable_label(self.selected == i, item).clicked() {
+        self.selected = i;
+    }
+}
+</code></pre>
+<ul><li>点击时切换选中状态</li>
+<li>选中状态的标签有高亮背景色</li>
+<li>适合"选项列表"而非表单</li>
+</ul>
+<hr>
+
+<h2>8.4 分组依赖逻辑（级联控制）</h2>
+
+<pre><code class="language-rust">fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+    egui::CentralPanel::default().show_inside(ui, |ui| {
+        ui.heading("设置面板");
+
+        // 主开关
+        ui.checkbox(&amp;mut self.enable_feature, "启用高级功能");
+
+        // 依赖子选项（仅在主开关启用时显示和可用）
+        ui.add_enabled(self.enable_feature, egui::Label::new("高级选项:"));
+        ui.add_enabled(self.enable_feature,
+            egui::Checkbox::new(&amp;mut self.advanced_option, ""),
+        );
+
+        // 全选/取消全选
+        ui.separator();
+        ui.heading("权限设置");
+        let all_checked = self.perms.iter().all(|&amp;p| p);
+        let any_checked = self.perms.iter().any(|&amp;p| p);
+
+        // 三态全选（勾选表示全选，横线表示部分选）
+        if ui.checkbox(&amp;mut all_checked, "全选").changed() {
+            let new_state = !all_checked;
+            for p in &amp;mut self.perms { *p = new_state; }
+        }
+
+        for (i, p) in self.perms.iter_mut().enumerate() {
+            ui.checkbox(p, format!("权限 {}", i + 1));
+        }
+    });
+}
+</code></pre>
+
+<hr>
+
+<h2>8.5 三种控件选择指南</h2>
+
+<table><thead><table><tr><td>场景</td><td>推荐控件</td></tr></table></thead><tbody><table><tr><td>表单中的单个选项</td><td><code>Checkbox</code></td></tr>
+<tr><td>设置页的开关</td><td><code>Switch</code></td></tr>
+<tr><td>列表/菜单中的选项</td><td><code>SelectableLabel</code></td></tr>
+<tr><td>多选列表</td><td>多个 <code>Checkbox</code></td></tr>
+<tr><td>单选列表</td><td><code>SelectableLabel</code> 带状态管理</td></tr>
+</table></tbody></table>
+<hr>
+
+<h2>本章小结</h2>
+<ul><li><code>ui.checkbox(&amp;mut bool, "标签")</code> — 复选框</li>
+<li>Toggle 开关 — 用 <code>selectable_label</code> 或 <code>Checkbox</code> 模拟</li>
+<li><code>ui.selectable_label(selected, text)</code> — 可选中标签</li>
+<li><code>ui.add_enabled(cond, widget)</code> — 级联控制启用/禁用</li>
+</ul>
+<strong>下一章</strong>：数值输入 — Slider 和 DragValue。
+
+<hr>
+
+<blockquote><p>📁 完整可运行代码见下方源码框，或进入 <code>example/</code> 目录执行 <code>cargo run</code></p></blockquote>
+
+    
+<div class="source-box">
+  <div class="source-header">
+    <span>📄 src/main.rs — 完整可运行代码</span>
+    <span>
+      <a href="example/src/main.rs" target="_blank">查看源文件</a>
+      &nbsp;|&nbsp;
+      <span style="color:#a6e3a1">cd example &amp;&amp; cargo run</span>
+    </span>
+  </div>
+  <pre><code class="language-rust">use eframe::egui;
+
+fn main() -&gt; eframe::Result&lt;()&gt; {
+    eframe::run_native("复选框与开关", eframe::NativeOptions::default(), Box::new(|_cc| Ok(Box::new(MyApp::default()))))
+}
+
+struct MyApp { enable_audio: bool, wifi: bool, perms: [bool; 3] }
+
+impl Default for MyApp {
+    fn default() -&gt; Self { Self { enable_audio: true, wifi: false, perms: [false; 3] } }
+}
+
+impl eframe::App for MyApp {
+    fn logic(&amp;mut self, _ctx: &amp;egui::Context, _frame: &amp;mut eframe::Frame) {}
+    fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+        ui.heading("设置面板");
+
+        ui.checkbox(&amp;mut self.enable_audio, "启用音频");
+
+        // 开关风格的 toggle
+        ui.horizontal(|ui| {
+            ui.label("Wi-Fi:");
+            if ui.selectable_label(self.wifi, if self.wifi { "● 开" } else { "○ 关" }).clicked() {
+                self.wifi = !self.wifi;
+            }
+        });
+        ui.label(format!("Wi-Fi 状态: {}", if self.wifi { "开" } else { "关" }));
+
+        ui.separator();
+        ui.heading("权限设置");
+
+        let mut all_check = self.perms.iter().all(|&amp;p| p);
+        if ui.checkbox(&amp;mut all_check, "全选").changed() {
+            let new = !all_check;
+            for p in &amp;mut self.perms { *p = new; }
+        }
+
+        for (i, p) in self.perms.iter_mut().enumerate() {
+            ui.checkbox(p, format!("权限 {}", i + 1));
+        }
+
+        ui.separator();
+        ui.add_enabled(false, egui::Button::new("仅在全部选中时可用"));
+    }
+}
+</code></pre>
+</div>
+  </main>
+</body>
+</html>
