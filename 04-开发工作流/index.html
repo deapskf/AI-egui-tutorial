@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>开发工作流 — EGUI 全面教程</title>
+  <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;line-height:1.75;color:#1a1a2e;background:#f8f9fa}
+#sidebar{width:280px;min-width:280px;height:100vh;position:fixed;left:0;top:0;overflow-y:auto;background:#1e1e2e;color:#cdd6f4;padding:24px 16px;z-index:10}
+#sidebar h2{font-size:1.1em;color:#f5c2e7;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #45475a}
+#sidebar ol{list-style:none;padding:0}
+#sidebar ol li{margin:2px 0;font-size:.88em}
+#sidebar ol li.part-title{font-weight:700;color:#a6e3a1;margin-top:14px;margin-bottom:4px;font-size:.78em;text-transform:uppercase;letter-spacing:.5px}
+#sidebar a{color:#bac2de;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;transition:background .15s}
+#sidebar a:hover{background:#45475a;color:#fff}
+#sidebar a.active{background:#cba6f7;color:#1e1e2e;font-weight:600}
+#content{margin-left:280px;max-width:860px;padding:40px 60px 100px;background:#fff;min-height:100vh;box-shadow:0 0 30px rgba(0,0,0,.05)}
+#content h1{font-size:2em;margin-bottom:8px;color:#11111b}
+#content h2{font-size:1.45em;margin-top:36px;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #cba6f7;color:#313244}
+#content h3{font-size:1.15em;margin-top:24px;margin-bottom:8px;color:#45475a}
+#content h4{font-size:1.05em;margin-top:16px;margin-bottom:6px;color:#585b70}
+#content p{margin:10px 0}
+#content ul,#content ol{margin:10px 0 10px 24px}
+#content li{margin:4px 0}
+#content a{color:#8839ef}
+#content code{background:#e6e9ef;padding:2px 6px;border-radius:4px;font-family:"Fira Code","Cascadia Code","JetBrains Mono","Source Code Pro","Noto Sans Mono SC",monospace;font-size:.9em;color:#d20f39}
+#content pre{background:#1e1e2e;color:#cdd6f4;padding:18px 20px;border-radius:8px;overflow-x:auto;margin:14px 0;line-height:1.55;font-size:.9em}
+#content pre code{background:none;color:#cdd6f4;padding:0;font-size:inherit}
+#content table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em}
+#content th,#content td{border:1px solid #dce0e8;padding:8px 12px;text-align:left}
+#content th{background:#e6e9ef;font-weight:700}
+#content tr:nth-child(even){background:#f8f9fb}
+#content hr{margin:28px 0;border:none;border-top:1px solid #dce0e8}
+#content blockquote{border-left:4px solid #cba6f7;padding:8px 16px;margin:14px 0;background:#f5f3ff;border-radius:0 6px 6px 0;color:#45475a}
+#content blockquote p:last-child{margin-bottom:0}
+#content img{max-width:100%;border-radius:6px;margin:12px 0}
+.source-box{background:#1e1e2e;border-radius:8px;margin:16px 0;overflow:hidden}
+.source-box .source-header{background:#313244;color:#cdd6f4;padding:10px 16px;font-size:.85em;display:flex;justify-content:space-between;align-items:center}
+.source-box .source-header a{color:#cba6f7;text-decoration:none;font-size:.8em}
+.source-box pre{margin:0;border-radius:0}
+@media(max-width:840px){#sidebar{display:none}#content{margin-left:0;padding:24px 20px}}
+@media print{#sidebar{display:none}#content{margin-left:0;box-shadow:none}}
+</style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2><a href="../index.html" style="color:#f5c2e7;text-decoration:none;">📘 EGUI 全面教程</a></h2>
+    <ol><li class="part-title">第一部分：入门篇</li><li><a href="../01-egui是什么/index.html">egui是什么</a></li><li><a href="../02-实战入门/index.html">实战入门</a></li><li><a href="../03-App-trait与帧循环/index.html">App-trait与帧循环</a></li><li><a class="active" href="../04-开发工作流/index.html">开发工作流</a></li><li class="part-title">第二部分：基础组件篇</li><li><a href="../05-文本与标签/index.html">文本与标签</a></li><li><a href="../06-按钮/index.html">按钮</a></li><li><a href="../07-输入框/index.html">输入框</a></li><li><a href="../08-复选框与开关/index.html">复选框与开关</a></li><li><a href="../09-数值输入/index.html">数值输入</a></li><li><a href="../10-下拉框与列表选择/index.html">下拉框与列表选择</a></li><li class="part-title">第三部分：布局系统</li><li><a href="../11-布局模型/index.html">布局模型</a></li><li><a href="../12-水平与垂直排列/index.html">水平与垂直排列</a></li><li><a href="../13-Grid与列布局/index.html">Grid与列布局</a></li><li><a href="../14-滚动区域/index.html">滚动区域</a></li><li><a href="../15-面板系统/index.html">面板系统</a></li><li class="part-title">第四部分：窗口与弹窗</li><li><a href="../16-窗口/index.html">窗口</a></li><li><a href="../17-右键菜单与弹窗/index.html">右键菜单与弹窗</a></li><li class="part-title">第五部分：状态管理</li><li><a href="../18-状态管理模型/index.html">状态管理模型</a></li><li><a href="../19-帧逻辑分离/index.html">帧逻辑分离</a></li><li><a href="../20-持久化/index.html">持久化</a></li><li class="part-title">第六部分：样式与主题</li><li><a href="../21-Style与Visuals/index.html">Style与Visuals</a></li><li><a href="../22-自定义字体/index.html">自定义字体</a></li><li><a href="../23-主题定制/index.html">主题定制</a></li><li class="part-title">第七部分：自定义绘制</li><li><a href="../24-Painter与Shape/index.html">Painter与Shape</a></li><li><a href="../25-自定义Widget/index.html">自定义Widget</a></li><li><a href="../26-交互式绘制/index.html">交互式绘制</a></li><li class="part-title">第八部分：生态集成</li><li><a href="../27-egui-extras/index.html">egui-extras</a></li><li><a href="../28-egui-plot/index.html">egui-plot</a></li><li><a href="../29-egui-phosphor/index.html">egui-phosphor</a></li><li><a href="../30-第三方crate集成/index.html">第三方crate集成</a></li><li><a href="../31-tokio与egui/index.html">tokio与egui</a></li><li class="part-title">第九部分：高级特性</li><li><a href="../32-动画/index.html">动画</a></li><li><a href="../33-拖拽与放置/index.html">拖拽与放置</a></li><li><a href="../34-输入处理/index.html">输入处理</a></li><li><a href="../35-多窗口/index.html">多窗口</a></li><li><a href="../36-性能优化/index.html">性能优化</a></li><li><a href="../37-常见陷阱与调试/index.html">常见陷阱与调试</a></li><li class="part-title">第十部分：深入原理</li><li><a href="../38-Immediate-Mode哲学/index.html">Immediate-Mode哲学</a></li><li><a href="../39-egui架构/index.html">egui架构</a></li><li><a href="../40-手写极简IMGUI/index.html">手写极简IMGUI</a></li><li><a href="../41-手动集成/index.html">手动集成</a></li><li><a href="../42-渲染管线/index.html">渲染管线</a></li><li class="part-title">第十一部分：工程实践</li><li><a href="../43-测试/index.html">测试</a></li><li><a href="../44-打包与分发/index.html">打包与分发</a></li><li><a href="../45-bevy-egui/index.html">bevy-egui</a></li><li class="part-title">附录</li><li><a href="../附录A-Widget速查表/index.html">附录 A · Widget速查表</a></li><li><a href="../附录B-Style-Visuals参考/index.html">附录 B · Style-Visuals参考</a></li><li><a href="../附录C-常见错误/index.html">附录 C · 常见错误</a></li><li><a href="../附录D-延伸阅读/index.html">附录 D · 延伸阅读</a></li></ol>
+  </nav>
+  <main id="content">
+    <p style="color:#8839ef;font-size:0.85em;margin-bottom:0;">第一部分：入门篇</p>
+    <p>
+﻿# 04 · 开发工作流与项目结构
+</p>
+<p>
+前两章我们写了简单的计数器应用，所有代码都在 <code>main.rs</code> 中。随着项目增长，你需要组织代码结构、优化编译配置、使用效率工具。本章覆盖 egui 开发的实践知识。
+</p>
+<hr>
+<h2>4.1 推荐的 Cargo.toml 配置</h2>
+<h3>最小配置</h3>
+<pre><code class="language-toml">[package]
+name = "my-egui-app"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+eframe = "0.34"
+</code></pre>
+
+<h3>选择渲染后端</h3>
+
+egui 0.34 起，<strong>wgpu 是默认渲染器</strong>。如果你想使用 OpenGL（如兼容老显卡或特定平台需求）：
+
+<pre><code class="language-toml"># 使用 OpenGL (glow) 后端
+eframe = { version = "0.34", default-features = false, features = ["glow"] }
+</code></pre>
+
+<table><thead><table><tr><td>后端</td><td>Feature</td><td>底层</td><td>适合</td></tr></table></thead><tbody><table><tr><td>wgpu（默认）</td><td><code>default-features</code></td><td>Vulkan / Metal / DX12 / WebGPU</td><td>现代平台</td></tr>
+<tr><td>glow</td><td><code>features = ["glow"]</code></td><td>OpenGL 3.3+ / WebGL</td><td>兼容性优先</td></tr>
+</table></tbody></table>
+<blockquote><p>对初学者来说，保持默认（wgpu）即可。只有在默认后端出问题时才考虑切换。</p></blockquote>
+
+<h3>Release 构建优化</h3>
+
+在 <code>Cargo.toml</code> 末尾添加 profile 配置：
+
+<pre><code class="language-toml">[profile.release]
+opt-level = 3      # 最高优化级别
+lto = "fat"        # 链接时优化（略微增加编译时间）
+codegen-units = 1  # 单代码生成单元（更好的优化，略慢编译）
+strip = true       # 移除调试符号（减小文件体积）
+</code></pre>
+
+这能将 <code>.exe</code> 文件从 ~20MB 减小到 ~5MB，启动速度也更快。
+
+<hr>
+
+<h2>4.2 典型项目目录结构</h2>
+
+随着功能增多，单文件 <code>main.rs</code> 会变得难以维护。推荐的演进路径是：
+
+<h3>小型项目（&lt; 500 行）</h3>
+
+<pre><code class="language-">my-app/
+├── Cargo.toml
+└── src/
+    └── main.rs          # 包含 MyApp + logic + ui
+</code></pre>
+
+<h3>中型项目（500 ~ 2000 行）</h3>
+
+<pre><code class="language-">my-app/
+├── Cargo.toml
+└── src/
+    ├── main.rs          # main 函数 + NativeOptions 配置
+    └── app.rs           # MyApp 结构体 + App trait 实现
+</code></pre>
+
+<strong><code>src/main.rs</code></strong>：
+<pre><code class="language-rust">mod app;
+
+use app::MyApp;
+
+fn main() -&gt; eframe::Result&lt;()&gt; {
+    let native_options = eframe::NativeOptions::default();
+    eframe::run_native(
+        "我的应用",
+        native_options,
+        Box::new(|_cc| Ok(Box::new(MyApp::default()))),
+    )
+}
+</code></pre>
+
+<strong><code>src/app.rs</code></strong>：
+<pre><code class="language-rust">use eframe::egui;
+
+pub struct MyApp {
+    // 你的状态字段...
+}
+
+impl Default for MyApp {
+    fn default() -&gt; Self { /<em> ... </em>/ }
+}
+
+impl eframe::App for MyApp {
+    fn logic(&amp;mut self, ctx: &amp;egui::Context, frame: &amp;mut eframe::Frame) {
+        // ...
+    }
+    fn ui(&amp;mut self, ui: &amp;mut egui::Ui, _frame: &amp;mut eframe::Frame) {
+        // ...
+    }
+}
+</code></pre>
+
+<h3>大型项目（&gt; 2000 行）</h3>
+
+<pre><code class="language-">my-app/
+├── Cargo.toml
+└── src/
+    ├── main.rs
+    ├── app.rs           # MyApp 结构体
+    ├── panels/          # 按界面区域拆分
+    │   ├── mod.rs
+    │   ├── sidebar.rs
+    │   ├── content.rs
+    │   └── status_bar.rs
+    ├── widgets/         # 自定义 Widget
+    │   ├── mod.rs
+    │   └── color_picker.rs
+    └── utils/           # 工具函数
+        ├── mod.rs
+        └── theme.rs
+</code></pre>
+
+<hr>
+
+<h2>4.3 开发效率工具</h2>
+
+<h3>cargo watch 自动重编译</h3>
+
+安装 <code>cargo-watch</code>：
+<pre><code class="language-bash">cargo install cargo-watch
+</code></pre>
+
+然后替代 <code>cargo run</code> 使用：
+<pre><code class="language-bash">cargo watch -x run
+</code></pre>
+
+每次保存文件，自动重新编译和运行。对于 UI 开发——频繁小修改、立即看效果——非常实用。
+
+<h3>环境变量与日志</h3>
+
+egui 使用 <code>log</code> crate 输出内部日志。启动应用时设置环境变量：
+
+<pre><code class="language-bash"># PowerShell (Windows)
+$env:RUST_LOG = "debug"
+cargo run
+
+<h1>bash (Linux/macOS)</h1>
+RUST_LOG=debug cargo run
+</code></pre>
+
+egui 会输出纹理加载、字体图集更新、帧时间等调试信息。
+
+如果你使用 <code>log</code> crate 在自己的代码中打印日志，配合 <code>env_logger</code>：
+
+<pre><code class="language-toml">[dependencies]
+eframe = "0.34"
+log = "0.4"
+env_logger = "0.11"
+</code></pre>
+
+<pre><code class="language-rust">fn main() {
+    env_logger::init(); // 初始化日志系统
+    log::info!("应用启动");
+    // ...
+}
+</code></pre>
+
+<h3>eframe::NativeOptions 调试开关</h3>
+
+<pre><code class="language-rust">let native_options = eframe::NativeOptions {
+    follow_system_theme: false,  // 不跟随系统主题（方便调试自定义主题）
+    vsync: true,                  // 垂直同步（默认 true，一般保留）
+    renderer: eframe::Renderer::Wgpu, // 显式指定渲染器
+    ..Default::default()
+};
+</code></pre>
+
+<table><thead><table><tr><td>字段</td><td>说明</td></tr></table></thead><tbody><table><tr><td><code>follow_system_theme</code></td><td>是否跟随系统明/暗主题</td></tr>
+<tr><td><code>vsync</code></td><td>垂直同步（减少撕裂，但可能有轻微延迟）</td></tr>
+<tr><td><code>renderer</code></td><td><code>Renderer::Wgpu</code> / <code>Renderer::Glow</code></td></tr>
+<tr><td><code>viewport</code></td><td>自定义窗口大小、位置等（详见第 35 章）</td></tr>
+<tr><td><code>depth_buffer</code></td><td>深度缓冲位数（3D 内容需要）</td></tr>
+<tr><td><code>multisampling</code></td><td>MSAA 抗锯齿采样数</td></tr>
+</table></tbody></table>
+<hr>
+
+<h2>4.4 跨平台注意事项</h2>
+
+egui 的代码在 Windows、macOS、Linux 上<strong>几乎完全一致</strong>。以下是你需要知道的主要区别：
+
+<h3>路径差异</h3>
+
+<pre><code class="language-rust">// ❌ 不要硬编码路径分隔符
+let path = "data\\config.json";  // Windows 特有
+
+// ✅ 使用 std::path::Path
+let path = std::path::Path::new("data").join("config.json");
+</code></pre>
+
+<h3>文件对话框</h3>
+
+<code>rfd</code>（Rust File Dialog）crate 在各平台调用原生文件选择对话框（第 30 章会详细讲解）。
+
+<h3>字体配置</h3>
+<ul><li><strong>Windows</strong>：系统字体在 <code>C:\Windows\Fonts\</code></li>
+<li><strong>macOS</strong>：系统字体在 <code>/System/Library/Fonts/</code> 和 <code>/Library/Fonts/</code></li>
+<li><strong>Linux</strong>：系统字体在 <code>/usr/share/fonts/</code></li>
+</ul>
+推荐的方式是将字体文件通过 <code>include_bytes!</code> 嵌入应用，确保跨平台一致性（第 22 章）。
+
+<h3>窗口行为</h3>
+<ul><li>Windows：窗口行为最标准</li>
+<li>macOS：菜单栏在屏幕顶部，不是窗口内部</li>
+<li>Linux：不同桌面环境有细微差异</li>
+</ul>
+egui 为你处理了大部分差异，你通常不需要写平台特定代码。
+
+<hr>
+
+<h2>4.5 从本章开始的约定</h2>
+
+在后续章节中，每个代码示例都遵循以下约定：
+<li><strong>完整的可运行项目</strong>放在 <code>examples/chXX-name/</code> 目录中</li>
+<li><strong>教程中的代码片段</strong>展示核心逻辑，可能省略 <code>main</code> 函数等样板</li>
+<li><strong>代码注释使用中文</strong>，变量和函数命名使用英文</li>
+<li><strong>Rust 2024 edition</strong> — <code>Cargo.toml</code> 中 <code>edition = "2024"</code></li>
+
+如果你想运行任何示例：
+
+<pre><code class="language-bash">cd examples/ch02-counter
+cargo run
+</code></pre>
+
+<hr>
+
+<h2>本章小结</h2>
+<ul><li><code>Cargo.toml</code> 中只需 <code>eframe = "0.34"</code>，默认使用 wgpu 渲染</li>
+<li>项目结构随规模演进：单体 → <code>main.rs + app.rs</code> → 多模块</li>
+<li>使用 <code>cargo watch</code> 提升开发效率</li>
+<li>使用 <code>RUST_LOG=debug</code> 查看 egui 内部日志</li>
+<li>egui 跨平台表现一致，少数差异已由 eframe 处理</li>
+</ul>
+<strong>下一章</strong>：开始学习 egui 的第一个基础组件——文本与标签。
+
+<hr>
+
+<blockquote><p>📁 本章无独立代码示例（工具与概念章）</p></blockquote>
+
+    
+  </main>
+</body>
+</html>
